@@ -1,6 +1,6 @@
 # Step 1: Importing libraries
 
-from operator import le
+# from operator import le
 
 import pandas as pd
 import numpy as np
@@ -32,6 +32,7 @@ print(missing_duplicates)
 
 # Step 4.1: Filling missing values
 # Here we fill the missing values with median for numerical columns since its middle value is more stable than outliers.
+# we found the missing values from the percent missing  from the previous step.
 
 # likes - 5% missing
 df['likes'] = df['likes'].fillna(df['likes'].median())
@@ -95,7 +96,7 @@ print(df[['engagement_rate', 'like_ratio', 'comment_ratio',
 # Here we fix the watch time ratio, views and subscribers outliers.
 # Some values in the watch time is greater than the video lenght which is not posssible. So we cap them.
 
-# Drop the problematic ratio column
+# Droping the problematic ratio column
 df.drop(columns=['watch_time_ratio'], inplace=True)
 
 # Instead, cap the raw watch_time_minutes at 99th percentile
@@ -120,7 +121,7 @@ print(df[['engagement_rate', 'like_ratio', 'comment_ratio',
 
 # Step 7: EDA 
 
-# Step 7.1: Revenue distribution-----------------------
+# Step 7.1: Revenue distribution
 # Here we visualize the distribution of ad revenue using histograms to identify the outliers.
 # We also apply a log transformation to identify the skewness in the data and to make it more normally distributed, 
 # which can be helpful for modeling.
@@ -144,7 +145,7 @@ plt.savefig('eda_1_revenue_distribution.png', dpi=150)
 plt.show()
 
 
-# Step 7.2: Correlation heatmap-----------------
+# Step 7.2: Correlation heatmap
 # Here we visualize the correlation between the numerical features and the target variable (ad revenue) using a heatmap.
 # It helps in calculating the correlation matrix, the Pearson correlation coefficient(r).
 # The correlation coefficient ranges from -1 to 1, where:
@@ -178,7 +179,7 @@ plt.tight_layout()
 plt.savefig('eda_2_correlation_heatmap.png', dpi=150)
 plt.show()
 
-# Step 7.3: Revenue by category-----------------
+# Step 7.3: Revenue by category
 # this helps visualize which video categories generate more ad revenue on average, providing insights.
 # This satisfies why we should use category as a feature in our linear regression model.
 
@@ -530,7 +531,7 @@ plt.tight_layout()
 plt.savefig('model_3_feature_importance.png', dpi=150)
 plt.show()
 
-# From the feature importance plot, we can identify which features have the most influence on the ad revenue predictions.
+# From the feature importance plot, we can identify which features have multicollinearity issues.
 
 # Step 13: Visualizing the residuals for the best model.
 # This is done to check if model errors are random (good) or patterned (bad)
@@ -550,8 +551,12 @@ plt.tight_layout()
 plt.savefig('model_4_residuals.png', dpi=150)
 plt.show()
 
-# From here we can see that the watch time minutes was overshadowed by the engagement rate and the like/comment ratios,
+# from this we can understand that multicollinearity.
+
+
+# From all these 3 visualizations,we can see that the watch time minutes was overshadowed by the engagement rate and the like/comment ratios,
 # so we will remove the like_ratio, comment_ratio and engagement_rate features to see if the model performance improves.
+# As a reult, we will have to retrain the model with the cleaned features.
 
 # STEP 10: Retrain with Cleaned Features
 
